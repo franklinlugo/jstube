@@ -8,28 +8,68 @@ import {
   getLastJsVideos
 } from '../actions/index';
 
+import VideosSection from '../components/VideosSection';
+
 class App extends Component {
   componentDidMount() {
     this.props.getReactVideos();
     this.props.getJsVideos();
   }
+  handleClickVideo = videoId => {
+    console.log(videoId);
+  };
   render() {
+    let results;
+    if (this.props.searchTerm.length > 0) {
+      results = (
+        <VideosSection
+          {...this.props.searchResults}
+          title={this.props.searchTerm}
+          handleClickVideo={this.handleClickVideo}
+        />
+      );
+    } else {
+      results = '';
+    }
     return (
       <div>
         <SearchBar
           value={this.props.searchTerm}
           handleSearch={this.props.handleSearch}
         />
+        {results}
+        <VideosSection
+          {...this.props.reactVideos}
+          title="ReactJs"
+          handleClickVideo={this.handleClickVideo}
+        />
+        <VideosSection
+          {...this.props.jsVideos}
+          title="JavaScript"
+          handleClickVideo={this.handleClickVideo}
+        />
       </div>
     );
   }
 }
 
+App.defaultProps = {
+  searchTerm: '',
+  reactVideos: {},
+  jsVideos: {},
+  searchResults: {},
+  handleClickVideo: () => {}
+};
+
 App.propTypes = {
-  searchTerm: PropTypes.string.isRequired,
+  searchTerm: PropTypes.string,
   handleSearch: PropTypes.func.isRequired,
+  handleClickVideo: PropTypes.func,
   getReactVideos: PropTypes.func.isRequired,
-  getJsVideos: PropTypes.func.isRequired
+  getJsVideos: PropTypes.func.isRequired,
+  reactVideos: PropTypes.object,
+  jsVideos: PropTypes.object,
+  searchResults: PropTypes.object
 };
 
 const mapStateToProps = state => ({

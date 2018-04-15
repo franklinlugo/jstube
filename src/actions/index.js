@@ -29,6 +29,7 @@ export const getLastReactVideos = () => dispatch => {
     q: 'reactjs',
     part: 'snippet',
     type: 'video',
+    order: 'date',
     maxResults: 15
   };
   yts(API_KEY, options).then(results =>
@@ -44,6 +45,7 @@ export const getLastJsVideos = () => dispatch => {
     q: 'javascript',
     part: 'snippet',
     type: 'video',
+    order: 'date',
     maxResults: 15
   };
   yts(API_KEY, options).then(results =>
