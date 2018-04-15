@@ -3,7 +3,8 @@ import {
   SET_SEARCH_TERM,
   DO_SEARCH,
   GET_JS_VIDEOS,
-  GET_REACT_VIDEOS
+  GET_REACT_VIDEOS,
+  HANDLE_MODAL
 } from './types';
 
 const API_KEY = 'AIzaSyAuWGD-BRYT18q7CHiNY7lA1KCiGn79WOw';
@@ -55,3 +56,13 @@ export const getLastJsVideos = () => dispatch => {
     })
   );
 };
+
+export function handleModal(visible, video = '') {
+  return {
+    type: HANDLE_MODAL,
+    payload: {
+      visible,
+      video
+    }
+  };
+}

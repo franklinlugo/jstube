@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import SearchBar from '../components/SearchBar';
+import VideosSection from '../components/VideosSection';
+import VideoModal from '../components/VideoModal';
 import {
   doSearch,
   getLastReactVideos,
-  getLastJsVideos
+  getLastJsVideos,
+  handleModal
 } from '../actions/index';
-
-import VideosSection from '../components/VideosSection';
 
 class App extends Component {
   componentDidMount() {
@@ -16,10 +17,14 @@ class App extends Component {
     this.props.getJsVideos();
   }
   handleClickVideo = videoId => {
-    console.log(videoId);
+    this.props.openModal(true, videoId);
+  };
+  closeModal = () => {
+    this.props.openModal(false);
   };
   render() {
     let results;
+    let modal;
     if (this.props.searchTerm.length > 0) {
       results = (
         <VideosSection
@@ -31,6 +36,14 @@ class App extends Component {
     } else {
       results = '';
     }
+    if (this.props.modal.visible) {
+      modal = (
+        <VideoModal
+          video={this.props.modal.video}
+          closeModal={this.closeModal}
+        />
+      );
+    }
     return (
       <div>
         <SearchBar
@@ -38,6 +51,7 @@ class App extends Component {
           handleSearch={this.props.handleSearch}
         />
         {results}
+        {modal}
         <VideosSection
           {...this.props.reactVideos}
           title="ReactJs"
@@ -58,25 +72,28 @@ App.defaultProps = {
   reactVideos: {},
   jsVideos: {},
   searchResults: {},
-  handleClickVideo: () => {}
+  openModal: () => {},
+  modal: {}
 };
 
 App.propTypes = {
   searchTerm: PropTypes.string,
   handleSearch: PropTypes.func.isRequired,
-  handleClickVideo: PropTypes.func,
   getReactVideos: PropTypes.func.isRequired,
   getJsVideos: PropTypes.func.isRequired,
   reactVideos: PropTypes.object,
   jsVideos: PropTypes.object,
-  searchResults: PropTypes.object
+  searchResults: PropTypes.object,
+  modal: PropTypes.object,
+  openModal: PropTypes.func
 };
 
 const mapStateToProps = state => ({
   searchTerm: state.searchTerm,
   searchResults: state.searchResults,
   reactVideos: state.reactVideos,
-  jsVideos: state.jsVideos
+  jsVideos: state.jsVideos,
+  modal: state.modal
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -88,6 +105,9 @@ const mapDispatchToProps = dispatch => ({
   },
   getJsVideos() {
     dispatch(getLastJsVideos());
+  },
+  openModal(visible, video) {
+    dispatch(handleModal(visible, video));
   }
 });
 

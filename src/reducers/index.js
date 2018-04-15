@@ -3,7 +3,8 @@ import {
   SET_SEARCH_TERM,
   DO_SEARCH,
   GET_JS_VIDEOS,
-  GET_REACT_VIDEOS
+  GET_REACT_VIDEOS,
+  HANDLE_MODAL
 } from '../actions/types';
 
 const searchTerm = (state = '', action) => {
@@ -34,11 +35,27 @@ const jsVideos = (state = {}, action) => {
   return state;
 };
 
+const modalInitialState = {
+  visible: false,
+  video: ''
+};
+
+const modal = (state = modalInitialState, action) => {
+  if (action.type === HANDLE_MODAL) {
+    return {
+      visible: action.payload.visible,
+      video: action.payload.video
+    };
+  }
+  return state;
+};
+
 const rootReducer = combineReducers({
   searchTerm,
   searchResults,
   reactVideos,
-  jsVideos
+  jsVideos,
+  modal
 });
 
 export default rootReducer;
